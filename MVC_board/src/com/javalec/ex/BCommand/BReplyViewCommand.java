@@ -9,7 +9,7 @@ import com.javalec.ex.BDTO.BDto;
 public class BReplyViewCommand implements BCommand{
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) {
-		String BId = request.getParameter("BId");
+		String BId = (String)request.getParameter("BId");
 		BDao dao = new BDao();
 		BDto dto = dao.reply_view(BId);
 		

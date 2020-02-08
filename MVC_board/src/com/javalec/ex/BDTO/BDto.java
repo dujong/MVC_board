@@ -1,9 +1,7 @@
 package com.javalec.ex.BDTO;
-import javax.servlet.annotation.WebServlet;
 import java.sql.Timestamp;
 
 
-@WebServlet("/BDto")
 public class BDto{
 	int BId;
 	String BName;

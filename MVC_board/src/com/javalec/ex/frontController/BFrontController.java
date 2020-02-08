@@ -19,7 +19,7 @@ import com.javalec.ex.BCommand.BReplyViewCommand;
 import com.javalec.ex.BCommand.BWriteCommand;
 
 
-@WebServlet("/*.do")
+@WebServlet("*.do")
 public class BFrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -31,33 +31,34 @@ public class BFrontController extends HttpServlet {
 
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		actionDo(request, response);
+		System.out.println("doget");
+		actionDo(request,response);
 
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		actionDo(request, response);
+		System.out.println("dopost");
+		actionDo(request,response);
 	}
 
 	
 	protected void actionDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("actionDo");
 		
+		System.out.println("actionDo");
 		request.setCharacterEncoding("EUC-KR");
 		
 		String viewPage = null;
 		BCommand command = null;
 		
-		String url = request.getRequestURI();
+		String uri = request.getRequestURI();
 		String conPath = request.getContextPath();
-		String com = url.substring(conPath.length());
+		String com = uri.substring(conPath.length());
 		
-		if(com.equals("/write_view.do")) {		
+		if(com.equals("/write_view.do")) {	
 			viewPage = "write_view.jsp";
 		}
-		else if(com.equals("/wirte.do")) {
+		else if(com.equals("/write.do")) {
 			command = new BWriteCommand();
 			command.execute(request, response);
 			viewPage = "list.do";
@@ -70,14 +71,14 @@ public class BFrontController extends HttpServlet {
 		else if(com.equals("/content_view.do")) {
 				command = new BContentCommand();
 				command.execute(request, response);
-				viewPage = "content_view";
+				viewPage = "content_view.jsp";
 			}
 		else if(com.equals("/modify.do")) {
 			command = new BModifyCommand();
 			command.execute(request, response);
 			viewPage = "list.do";
 				}
-		else if(com.equals("delete.do")) {
+		else if(com.equals("/delete.do")) {
 			command = new BDeleteCommand();
 			command.execute(request, response);
 			viewPage = "list.do";

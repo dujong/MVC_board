@@ -30,16 +30,17 @@ public class BDao {
 		
 		Connection connection = null;
 		PreparedStatement stmt = null;
-		String query = "insert into MVC_board (bId, bName, bTitle, bContent, bHit, bGroup, bStep, bIndent) "
-				+ "values(MVC_board_seq_nextval, ?, ?, ?, 0, MVC_board_seq_currval,0,0)";
-		int ri;
+		
+		
 		try {
 			connection = dataSource.getConnection();
+			
+			String query = "insert into MVC_board (BId, BName, BTitle, BContent, BHit, BGroup, BStep, BIndent) values(MVC_board_seq.nextval, ?, ?, ?, 0, MVC_board_seq.currval,0,0)";
 			stmt = connection.prepareStatement(query);
 			stmt.setString(1, BName);
 			stmt.setString(2, BTitle);
 			stmt.setString(3, BContent);
-			ri = stmt.executeUpdate();
+			int ri = stmt.executeUpdate();
 			
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -48,8 +49,8 @@ public class BDao {
 			if(stmt != null) stmt.close();
 			if(connection != null) connection.close();
 			
-			}catch (Exception e) {
-				e.printStackTrace();
+			}catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		}
 	}
@@ -59,26 +60,28 @@ public class BDao {
 		Connection connection = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String query = "select bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent from mvc_board order by bGroup desc, bStep asc";
+		
 		
 		try {
 			connection = dataSource.getConnection();
+			
+			String query = "select BId, BName, BTitle, BContent, BDate, BHit, BGroup, BStep, BIndent from MVC_board order by BGroup desc, BStep asc";
 			stmt = connection.prepareStatement(query);
 			rs = stmt.executeQuery();
 			
 			while(rs.next())
 			{
-				int bId = rs.getInt("bId");
-				String bName = rs.getString("bName");
-				String bTitle = rs.getString("bTitle");
-				String bContent = rs.getString("bContent");
-				Timestamp bDate = rs.getTimestamp("bDate");
-				int bHit = rs.getInt("bHit");
-				int bGroup = rs.getInt("bGroup");
-				int bStep = rs.getInt("bStep");
-				int bIndent = rs.getInt("bIndent");
+				int BId = rs.getInt("BId");
+				String BName = rs.getString("BName");
+				String BTitle = rs.getString("BTitle");
+				String BContent = rs.getString("BContent");
+				Timestamp BDate = rs.getTimestamp("BDate");
+				int BHit = rs.getInt("BHit");
+				int BGroup = rs.getInt("BGroup");
+				int BStep = rs.getInt("BStep");
+				int BIndent = rs.getInt("BIndent");
 				
-				BDto dto = new BDto(bId, bName, bTitle, bContent, bDate, bHit, bGroup, bStep, bIndent);
+				BDto dto = new BDto(BId, BName, BTitle, BContent, BDate, BHit, BGroup, BStep, BIndent);
 				dtos.add(dto);
 			}
 			
@@ -89,17 +92,21 @@ public class BDao {
 			if(rs != null) rs.close();
 			if(stmt != null) stmt.close();
 			if(connection != null) connection.close();
-			}catch (Exception e) {
-				e.printStackTrace();
+			}catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		}
 		
 		return dtos;
 	}
 	
-	public BDto contentView(String StrID) {
+	public BDto contentView(String strID) {
 		
-		upHit(StrID);
+		if(strID == null)
+			System.out.println("포기하지 않아요");
+		
+		upHit(strID);
+		
 		BDto dto = null;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -110,10 +117,10 @@ public class BDao {
 			
 			String query = "select * from MVC_board where BId = ?";
 			pstmt = connection.prepareStatement(query);
-			pstmt.setInt(1, Integer.parseInt(StrID));
+			pstmt.setInt(1, Integer.parseInt(strID));
 			resultset = pstmt.executeQuery();
 			
-			while(resultset.next())
+			if(resultset.next())
 			{
 				int BId = resultset.getInt("BId");
 				String BName = resultset.getString("BName");
@@ -130,13 +137,15 @@ public class BDao {
 			
 		}catch (Exception e) {
 			e.printStackTrace();
+			
 		}finally {
 			try {
 			if(resultset != null) resultset.close();
 			if(pstmt != null) pstmt.close();
 			if(connection != null) connection.close();
-			}catch (Exception e) {
-				e.printStackTrace();
+			
+			}catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		}
 		
@@ -163,8 +172,8 @@ public class BDao {
 				if(pstmt != null) pstmt.close();
 				if(connection != null) connection.close();
 				
-			}catch (Exception e) {
-				e.printStackTrace();
+			}catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		}
 		
@@ -176,7 +185,7 @@ public class BDao {
 		
 		try {
 			connection = dataSource.getConnection();
-			String query = "update MVC_board set BName = ?, BTitle = ? BContent = ? where BId = ?";
+			String query = "update MVC_board set BName = ?, BTitle = ? ,BContent = ? where BId = ?";
 			
 			pstmt = connection.prepareStatement(query);
 			pstmt.setString(1, BName);
@@ -192,8 +201,8 @@ public class BDao {
 				if(pstmt != null) pstmt.close();
 				if(connection != null) connection.close();
 				
-			}catch (Exception e) {
-				e.printStackTrace();
+			}catch (Exception e2) {
+				e2.printStackTrace();
 			}
 		}
 		
@@ -237,6 +246,7 @@ public class BDao {
 			connection = dataSource.getConnection();
 			String query = "select * from MVC_board where BId = ?";
 			preparedstatement = connection.prepareStatement(query);
+			preparedstatement.setInt(1,Integer.parseInt(StrBID));
 			resultset = preparedstatement.executeQuery();
 			
 			while(resultset.next())
